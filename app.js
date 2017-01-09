@@ -31,44 +31,44 @@ var connection = mysql.createConnection({
     database: 'quietgym'
 });
 
-app.get('/', function(req, res) {
-  // Returns an array containing the number of average users per hour for every hour of the current day
-  var query = 'SELECT AVG(numUsers) FROM attendance WHERE date = "2017-01-04" GROUP BY HOUR(time)';
-  connection.query(query, function(err, results) {
-    if(err) {
-      console.log(err);
+connection.connect(function(err) {
+    if (err) {
+        console.log('Error connecting to the database.');
+        throw err;
     }
+    console.log('You are now connected to the database.');
+});
 
-    var values = [];
-    for(var i = 0; i < results.length; i++) {
-      values[i] = results[i]['AVG(numUsers)'];
-      // console.log(values[i]);
-    }
-    console.log(values);
-    res.render('index', { values: values });
-  });
+app.get('/', function(req, res) {
+    res.render('index');
 });
 
 app.get('/today', function(req, res) {
+
+    // Get name of current day as a variable, query this as the column name
     // Returns an array containing the number of average users per hour for every hour of the current day
-    var query = 'SELECT AVG(numUsers) FROM attendance WHERE date = "2017-01-04" GROUP BY HOUR(time)';
+    var query = "SELECT timeslot, Monday FROM timeslots WHERE Week = '1' AND Year = '2017'";
     connection.query(query, function(err, results) {
         if(err) {
-            console.log(err);
+            console.log("Error executing query: '" + query+"'");
+            throw(err);
         }
 
-        var values = [];
-        for(var i = 0; i < results.length; i++) {
-            values[i] = results[i]['AVG(numUsers)'];
-            // console.log(values[i]);
-        }
-        // console.log(values);
-        res.send(values);
+        res.send(results);
     });
 });
 
 app.get('/thisweek', function(req, res) {
-    res.send("Request for this week's data successful!");
+    var query = "SELECT timeslot, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday FROM timeslots WHERE Week = '1' AND Year = '2017' ";
+
+    connection.query(query, function(err, results) {
+        if(err) {
+            console.log("Error executing query: '" + query+"'");
+            throw(err);
+        }
+
+        res.send(results);
+    })
 });
 
 app.get("/overall", function(req, res) {

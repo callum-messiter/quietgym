@@ -1,3 +1,5 @@
+$("#myChart").mousedown(function(e){ e.preventDefault(); });
+
 function createChart(chartData) {
     var ctx = $("#myChart");
 
@@ -41,13 +43,51 @@ function getTodayData() {
     });
 }
 
+function getThisWeekData() {
+    $.ajax({
+        url: "http://localhost:3000/thisweek",
+        type: "GET",
+        success: function (dataValues) {
+            console.log(dataValues);
+            chartData = [{
+                label: 'Monday',
+                data: dataValues,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255,99,132,1)',
+                borderWidth: 2
+                }
+            ];
+
+
+            createChart(chartData);
+        },
+        error: function (dataValues) {
+            console.log("Error processing AJAX request to 'localhost/thisweek'.")
+        }
+    });
+}
+
+// function getOverallData() {
+
+// }
+
 $(document).ready(function() {
+    // Load today's data as a default
+    getTodayData();
+
     var today = $("#todayBtn");
-    var thisWeek = $("#weekBtn");
+    var thisWeek = $("#thisWeekBtn");
     var overall = $("#overallBtn");
 
     today.click(function(){
         getTodayData();
     });
 
+    thisWeek.click(function(){
+        // getThisWeekData();
+    });
+
+    overall.click(function() {
+        // getOverallData();
+    })
 });
