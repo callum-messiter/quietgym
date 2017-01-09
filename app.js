@@ -45,12 +45,18 @@ app.get('/', function(req, res) {
 
 app.get('/today', function(req, res) {
 
-    // Get name of current day as a variable, query this as the column name
-    // Returns an array containing the number of average users per hour for every hour of the current day
-    var query = "SELECT timeslot, Monday FROM timeslots WHERE Week = '1' AND Year = '2017'";
+    // Get name of current day as a variable, which maps to the respective column name in our db query
+    function getCurrentDayName() {
+        var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        var dateToday = new Date();
+        var n = dateToday.getDay();
+        var today = weekdays[n];
+        return today;
+    }
+
+    var query = "SELECT timeslot, " + getCurrentDayName() + " FROM timeslots WHERE Week = '1' AND Year = '2017'";
     connection.query(query, function(err, results) {
         if(err) {
-            console.log("Error executing query: '" + query+"'");
             throw(err);
         }
 
