@@ -1,12 +1,12 @@
 $("#myChart").mousedown(function(e){ e.preventDefault(); });
 
-function createChart(chartData) {
+function createChart(chartData, timeslots) {
     var ctx = $("#myChart");
 
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ["6am-7am", "7am-8am", "8am-9am", "9am-10am", "10am-11am", "11am-12pm", "12pm-1pm", "1pm-2pm", "2pm-3pm", "4pm-5pm", "5pm-6pm", "6pm-7pm", "7pm-8pm", "8pm-9pm", "9pm-10pm"],
+            labels: timeslots,
             options: {
                 scales: {
                     yAxes: [{
@@ -25,17 +25,28 @@ function getTodayData() {
     $.ajax({
         url: "http://localhost:3000/today",
         type: "GET",
-        success: function (dataValues) {
-            console.log(dataValues);
+        success: function (data) {
+
+            var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            var keys = Object.keys(data[0]);
+            var today = keys[1];
+            var timeslots = [];
+            var numUsers = [];
+
+            for(var i = 0, len = data.length; i < len; i++) {
+                timeslots.push(data[i].timeslot);
+                numUsers.push(data[i][today]);
+            }
+
             chartData = [{
-                label: 'Monday',
-                data: dataValues,
+                label: today,
+                data: numUsers,
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgba(255,99,132,1)',
                 borderWidth: 2
             }];
 
-            createChart(chartData);
+            createChart(chartData, timeslots);
         },
         error: function (dataValues) {
             console.log("Error processing AJAX request to 'localhost/today'.")
