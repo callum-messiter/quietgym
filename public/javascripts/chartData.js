@@ -1,5 +1,13 @@
 $("#myChart").mousedown(function(e){ e.preventDefault(); });
 
+function getCurrentDayName() {
+    var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var dateToday = new Date();
+    var n = dateToday.getDay();
+    var today = weekdays[n];
+    return today;
+}
+
 function createChart(chartData, timeslots) {
     var ctx = $("#myChart");
 
@@ -27,15 +35,15 @@ function getTodayData() {
         type: "GET",
         success: function (data) {
 
-            var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            var keys = Object.keys(data[0]);
-            var today = keys[1];
+            // TO-DO: Handle errors: data array empty, data[i].timeslot undefined, data[i][today] undefined
             var timeslots = [];
             var numUsers = [];
 
+            // Loop through each object in the array (e.g. {"timeslot":"6am-7am","Tuesday":6} )
             for(var i = 0, len = data.length; i < len; i++) {
-                timeslots.push(data[i].timeslot);
-                numUsers.push(data[i][today]);
+                timeslots.push(data[i].timeslot); // Push the value of the "timeslot" key (e.g. "6am-7am")
+                today = getCurrentDayName(); // Get the name of the current day in order to reference the object's second key value
+                numUsers.push(data[i][today]); // Push the integer value of the today key (e.g. 5)
             }
 
             chartData = [{
