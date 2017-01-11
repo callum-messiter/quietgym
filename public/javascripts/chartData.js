@@ -66,35 +66,26 @@ function getThisWeekData() {
     $.ajax({
         url: "http://localhost:3000/thisweek",
         type: "GET",
-        success: function (data) {
+        success: function (results) {
 
-                var timeslot = [];
-                var Monday = [];
-                var Tuesday = [];
-                var Wednesday = [];
-                var Thursday = [];
-                var Friday = [];
-                var Saturday = [];
-                var Sunday = [];
-
-                data.map(function (each) {
-                    timeslot.push(each.timeslot);
-                    Monday.push(each.Monday);
-                    Tuesday.push(each.Tuesday);
-                    Wednesday.push(each.Wednesday);
-                    Thursday.push(each.Thursday);
-                    Friday.push(each.Friday);
-                    Saturday.push(each.Saturday);
-                    Sunday.push(each.Sunday);
+                var data = {};
+                // Iterate the objects of the array
+                results.forEach(function (o) {
+                    // Iterate the properties of the object
+                    Object.keys(o).forEach(function (k) {
+                        var key = k.toLowerCase();
+                        // Create the array if it doesn't already exist
+                        data[key] = data[key] || [];
+                        // Push the property's value to the array sharing the property's key name
+                        data[key].push(o[k]);
+                    });
                 });
-
-                console.log(timeslot, Monday, Tuesday);
 
                 // Generate chartData programmatically to make more readable/elegant
                 chartData = [{
                     label: 'Monday',
                     fill: false,
-                    data: Monday,
+                    data: data.monday,
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderColor: 'rgba(255,99,132,1)',
                     borderWidth: 2
@@ -102,7 +93,7 @@ function getThisWeekData() {
                 {
                     label: 'Tuesday',
                     fill: false,
-                    data: Tuesday,
+                    data: data.tuesday,
                     backgroundColor: 'rgba(49, 215, 49, 0.42)',
                     borderColor: 'rgba(49, 215, 49, 1)',
                     borderWidth: 2
@@ -110,7 +101,7 @@ function getThisWeekData() {
                 {
                     label: 'Wednesday',
                     fill: false,
-                    data: Wednesday,
+                    data: data.wednesday,
                     backgroundColor: 'rgba(250, 129, 30, 0.42)',
                     borderColor: 'rgba(250, 129, 30, 1)',
                     borderWidth: 2
@@ -118,7 +109,7 @@ function getThisWeekData() {
                 {
                     label: 'Thursday',
                     fill: false,
-                    data: Thursday,
+                    data: data.thursday,
                     backgroundColor: 'rgba(81, 127, 244, 0.42)',
                     borderColor: 'rgba(81, 127, 244, 1)',
                     borderWidth: 2
@@ -126,7 +117,7 @@ function getThisWeekData() {
                 {
                     label: 'Friday',
                     fill: false,
-                    data: Friday,
+                    data: data.friday,
                     backgroundColor: 'rgba(172, 55, 245, 0.42)',
                     borderColor: 'rgba(172, 55, 245, 1)',
                     borderWidth: 2
@@ -134,7 +125,7 @@ function getThisWeekData() {
                 {
                     label: 'Saturday',
                     fill: false,
-                    data: Saturday,
+                    data: data.saturday,
                     backgroundColor: 'rgba(44, 241, 221, 0.42)',
                     borderColor: 'rgba(44, 241, 221, 1)',
                     borderWidth: 2
@@ -142,15 +133,15 @@ function getThisWeekData() {
                 {
                     label: 'Sunday',
                     fill: false,
-                    data: Sunday,
+                    data: data.sunday,
                     backgroundColor: 'rgba(238, 241, 44, 0.42)',
                     borderColor: 'rgba(238, 241, 44, 1)',
                     borderWidth: 2
                 }];
 
-            createChart(chartData, timeslot);
+            createChart(chartData, data.timeslot);
         },
-        error: function (data) {
+        error: function (results) {
             console.log("Error processing AJAX request to 'localhost/thisweek'.")
         }
     });
