@@ -54,7 +54,9 @@ app.get('/today', function(req, res) {
         return today;
     }
 
-    var query = "SELECT timeslot, " + getCurrentDayName() + " FROM timeslots WHERE Week = '1' AND Year = '2017'";
+    var today = getCurrentDayName();
+
+    var query = "SELECT timeslot, " + today + " FROM timeslots WHERE Week = '1' AND Year = '2017'";
     connection.query(query, function(err, results) {
         if(err) {
             throw(err);
