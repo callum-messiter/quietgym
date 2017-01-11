@@ -11,16 +11,23 @@
   </head>
   <body>
     <div class="container">
-      <div class="row">
-        <div class="col-sm-8 col-sm-offset-2 text-center">
-          <button class="btn" id="todayBtn">Today</button>
-          <button class="btn" id="thisWeekBtn">This week</button>
-          <button class="btn" id="overallBtn">Overall</button>
-        </div>
-      </div>
+        <nav class="navbar col-sm-8 col-sm-offset-2">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">quietgym</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="todayLi"><a href="#">Today</a></li>
+                    <li id="thisWeekLi"><a href="#">This Week</a></li>
+                    <li id="overallLi"><a href="#">Overall</a></li>
+                </ul>
+            </div>
+        </nav>
       <div class="row">
         <div class="col-sm-8 col-sm-offset-2">
-          <canvas id="myChart"></canvas>
+            <div class="wrapper">
+                <canvas id="myChart"></canvas>
+            </div>
         </div>
       </div>
     </div>

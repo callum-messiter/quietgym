@@ -8,13 +8,91 @@ function getCurrentDayName() {
     return today;
 }
 
-function createChart(chartData, timeslot) {
+function organiseData(results) {
+    var data = {};
+    // Iterate the objects of the array
+    results.forEach(function (o) {
+        // Iterate the properties of the object
+        Object.keys(o).forEach(function (k) {
+            var key = k.toLowerCase();
+            // Create the array if it doesn't already exist
+            data[key] = data[key] || [];
+            // Push the property's value to the array sharing the property's key name
+            data[key].push(o[k]);
+        });
+    });
+    return data;
+}
+
+function setDataSets(data) {
+    // Generate chartData programmatically to make more readable/elegant
+    dataSets = [{
+        label: 'Monday',
+        fill: false,
+        data: data.monday,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255,99,132,1)',
+        borderWidth: 2
+    },
+    {
+        label: 'Tuesday',
+        fill: false,
+        data: data.tuesday,
+        backgroundColor: 'rgba(49, 215, 49, 0.42)',
+        borderColor: 'rgba(49, 215, 49, 1)',
+        borderWidth: 2
+    },
+    {
+        label: 'Wednesday',
+        fill: false,
+        data: data.wednesday,
+        backgroundColor: 'rgba(250, 129, 30, 0.42)',
+        borderColor: 'rgba(250, 129, 30, 1)',
+        borderWidth: 2
+    },
+    {
+        label: 'Thursday',
+        fill: false,
+        data: data.thursday,
+        backgroundColor: 'rgba(81, 127, 244, 0.42)',
+        borderColor: 'rgba(81, 127, 244, 1)',
+        borderWidth: 2
+    },
+    {
+        label: 'Friday',
+        fill: false,
+        data: data.friday,
+        backgroundColor: 'rgba(172, 55, 245, 0.42)',
+        borderColor: 'rgba(172, 55, 245, 1)',
+        borderWidth: 2
+    },
+    {
+        label: 'Saturday',
+        fill: false,
+        data: data.saturday,
+        backgroundColor: 'rgba(44, 241, 221, 0.42)',
+        borderColor: 'rgba(44, 241, 221, 1)',
+        borderWidth: 2
+    },
+    {
+        label: 'Sunday',
+        fill: false,
+        data: data.sunday,
+        backgroundColor: 'rgba(238, 241, 44, 0.42)',
+        borderColor: 'rgba(238, 241, 44, 1)',
+        borderWidth: 2
+    }];
+    return dataSets;
+}
+
+function createChart(dataSets, timeslot) {
     var ctx = $("#myChart");
 
     var myChart = new Chart(ctx, {
         type: 'line',
         fill: false,
         data: {
+            // Set x-axis values as the array of timeslots returned as a response to the AJAX request
             labels: timeslot,
             options: {
                 scales: {
@@ -25,7 +103,7 @@ function createChart(chartData, timeslot) {
                     }]
                 }
             },
-            datasets: chartData
+            datasets: dataSets
         }
     });
 }
@@ -46,7 +124,7 @@ function getTodayData() {
                 numUsers.push(data[i][today]); // Push the integer value of the today key (e.g. 5)
             }
 
-            chartData = [{
+            dataSets = [{
                 label: today,
                 data: numUsers,
                 backgroundColor: 'rgba(81, 127, 244, 0.42)',
@@ -54,7 +132,7 @@ function getTodayData() {
                 borderWidth: 2
             }];
 
-            createChart(chartData, timeslot);
+            createChart(dataSets, timeslot);
         },
         error: function (dataValues) {
             console.log("Error processing AJAX request to 'localhost/today'.")
@@ -67,79 +145,9 @@ function getThisWeekData() {
         url: "http://localhost:3000/thisweek",
         type: "GET",
         success: function (results) {
-
-                var data = {};
-                // Iterate the objects of the array
-                results.forEach(function (o) {
-                    // Iterate the properties of the object
-                    Object.keys(o).forEach(function (k) {
-                        var key = k.toLowerCase();
-                        // Create the array if it doesn't already exist
-                        data[key] = data[key] || [];
-                        // Push the property's value to the array sharing the property's key name
-                        data[key].push(o[k]);
-                    });
-                });
-
-                // Generate chartData programmatically to make more readable/elegant
-                chartData = [{
-                    label: 'Monday',
-                    fill: false,
-                    data: data.monday,
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255,99,132,1)',
-                    borderWidth: 2
-                },
-                {
-                    label: 'Tuesday',
-                    fill: false,
-                    data: data.tuesday,
-                    backgroundColor: 'rgba(49, 215, 49, 0.42)',
-                    borderColor: 'rgba(49, 215, 49, 1)',
-                    borderWidth: 2
-                },
-                {
-                    label: 'Wednesday',
-                    fill: false,
-                    data: data.wednesday,
-                    backgroundColor: 'rgba(250, 129, 30, 0.42)',
-                    borderColor: 'rgba(250, 129, 30, 1)',
-                    borderWidth: 2
-                },
-                {
-                    label: 'Thursday',
-                    fill: false,
-                    data: data.thursday,
-                    backgroundColor: 'rgba(81, 127, 244, 0.42)',
-                    borderColor: 'rgba(81, 127, 244, 1)',
-                    borderWidth: 2
-                },
-                {
-                    label: 'Friday',
-                    fill: false,
-                    data: data.friday,
-                    backgroundColor: 'rgba(172, 55, 245, 0.42)',
-                    borderColor: 'rgba(172, 55, 245, 1)',
-                    borderWidth: 2
-                },
-                {
-                    label: 'Saturday',
-                    fill: false,
-                    data: data.saturday,
-                    backgroundColor: 'rgba(44, 241, 221, 0.42)',
-                    borderColor: 'rgba(44, 241, 221, 1)',
-                    borderWidth: 2
-                },
-                {
-                    label: 'Sunday',
-                    fill: false,
-                    data: data.sunday,
-                    backgroundColor: 'rgba(238, 241, 44, 0.42)',
-                    borderColor: 'rgba(238, 241, 44, 1)',
-                    borderWidth: 2
-                }];
-
-            createChart(chartData, data.timeslot);
+            var data = organiseData(results);
+            var dataSets = setDataSets(data);
+            createChart(dataSets, data.timeslot);
         },
         error: function (results) {
             console.log("Error processing AJAX request to 'localhost/thisweek'.")
@@ -151,9 +159,14 @@ $(document).ready(function() {
     // Load today's data as a default
     getTodayData();
 
-    var today = $("#todayBtn");
-    var thisWeek = $("#thisWeekBtn");
-    var overall = $("#overallBtn");
+    var home = $(".navbar-header");
+    var today = $("#todayLi");
+    var thisWeek = $("#thisWeekLi");
+    var overall = $("#overallLi");
+
+    home.click(function(){
+        getTodayData();
+    });
 
     today.click(function(){
         getTodayData();
