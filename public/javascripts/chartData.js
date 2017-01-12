@@ -178,5 +178,5 @@ $(document).ready(function() {
 
     overall.click(function() {
         // getOverallData();
-    })
+    });
 });

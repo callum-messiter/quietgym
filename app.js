@@ -79,6 +79,23 @@ app.get('/thisweek', function(req, res) {
     })
 });
 
-app.get("/overall", function(req, res) {
-    res.send("Request for overall data successful!");
+app.get('/overall', function(req, res) {
+    var query = 'SELECT timeslot,' +
+        'AVG(Monday),' +
+        'AVG(Tuesday),' +
+        'AVG(Wednesday),' +
+        'AVG(Thursday),' +
+        'AVG(Friday),' +
+        'AVG(Saturday),' +
+        'AVG(Sunday)' +
+        'FROM test ' +
+        'GROUP BY timeslot';
+
+    connection.query(query, function(err, results) {
+        if(err) {
+            throw(err);
+        }
+
+        res.send(results);
+    });
 });
