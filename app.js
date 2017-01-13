@@ -56,6 +56,7 @@ app.get('/today', function(req, res) {
 
     var today = getCurrentDayName();
 
+    // Week and Year should be set dynamically, corresponding with the current week and current year respectively
     var query = "SELECT timeslot, " + today + " FROM timeslots WHERE Week = '1' AND Year = '2017'";
     connection.query(query, function(err, results) {
         if(err) {
@@ -76,25 +77,34 @@ app.get('/thisweek', function(req, res) {
         }
 
         res.send(results);
-    })
+    });
 });
 
 app.get('/overall', function(req, res) {
     var query = 'SELECT timeslot,' +
-        'AVG(Monday),' +
-        'AVG(Tuesday),' +
-        'AVG(Wednesday),' +
-        'AVG(Thursday),' +
-        'AVG(Friday),' +
-        'AVG(Saturday),' +
-        'AVG(Sunday)' +
-        'FROM test ' +
-        'GROUP BY timeslot';
+                'AVG(Monday),' +
+                'AVG(Tuesday),' +
+                'AVG(Wednesday),' +
+                'AVG(Thursday),' +
+                'AVG(Friday),' +
+                'AVG(Saturday),' +
+                'AVG(Sunday)' +
+                'FROM timeslots ' +
+                'GROUP BY timeslot';
 
     connection.query(query, function(err, results) {
         if(err) {
             throw(err);
         }
+
+        results.forEach(function(o) {
+            Object.keys(o).forEach(function(k) {
+                if(k.includes("AVG")) {
+                    o[k.slice(4, -1)] = o[k]; // Extract the day of the week from the key name and create new property
+                    delete o[k]; // Delete the original property
+                }
+            });
+        });
 
         res.send(results);
     });
