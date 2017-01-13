@@ -15,10 +15,8 @@ function organiseData(results) {
         // Iterate the properties of the object
         Object.keys(o).forEach(function (k) {
             var key = k.toLowerCase();
-            // Create the array if it doesn't already exist
-            data[key] = data[key] || [];
-            // Push the property's value to the array sharing the property's key name
-            data[key].push(o[k]);
+            data[key] = data[key] || []; // Create the array if it doesn't already exist
+            data[key].push(o[k]); // Push the property's value to the array sharing the property's key name
         });
     });
     return data;
@@ -155,6 +153,21 @@ function getThisWeekData() {
     });
 }
 
+function getOverallData() {
+    $.ajax({
+        url: "http://localhost:3000/overall",
+        type: "GET",
+        success: function (results) {
+            var data = organiseData(results);
+            var dataSets = setDataSets(data);
+            createChart(dataSets, data.timeslot);
+        },
+        error: function (results) {
+            console.log("Error processing AJAX request to 'localhost/overall'.")
+        }
+    });
+}
+
 $(document).ready(function() {
     // Load today's data as a default
     getTodayData();
@@ -177,6 +190,6 @@ $(document).ready(function() {
     });
 
     overall.click(function() {
-        // getOverallData();
+        getOverallData();
     });
 });
