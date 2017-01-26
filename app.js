@@ -56,8 +56,10 @@ app.get('/today', function(req, res) {
 
     var today = getCurrentDayName();
 
-    // Week and Year should be set dynamically, corresponding with the current week and current year respectively
-    var query = "SELECT timeslot, " + today + " FROM timeslots WHERE Week = '1' AND Year = '2017'";
+    // WHERE Week = 'WEEK(dateToday, 3)' will match the data format with PHP's data('W')
+    var query = "SELECT timeslot, " + today + " FROM timeslots " +
+                "WHERE Week = WEEK(CURDATE(), 3) " +
+                "AND Year = YEAR(CURDATE())"; // 'Order by timeslot' not necessary due to chronology
     connection.query(query, function(err, results) {
         if(err) {
             throw(err);
@@ -68,7 +70,8 @@ app.get('/today', function(req, res) {
 });
 
 app.get('/thisweek', function(req, res) {
-    var query = "SELECT timeslot, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday FROM timeslots WHERE Week = '1' AND Year = '2017' ";
+    var query = "SELECT timeslot, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday " +
+                "FROM timeslots WHERE Week = YEARWEEK(NOW()) ";
 
     connection.query(query, function(err, results) {
         if(err) {
@@ -81,14 +84,14 @@ app.get('/thisweek', function(req, res) {
 });
 
 app.get('/overall', function(req, res) {
-    var query = 'SELECT timeslot,' +
-                'AVG(Monday),' +
-                'AVG(Tuesday),' +
-                'AVG(Wednesday),' +
-                'AVG(Thursday),' +
-                'AVG(Friday),' +
-                'AVG(Saturday),' +
-                'AVG(Sunday)' +
+    var query = 'SELECT timeslot, ' +
+                'AVG(Monday), ' +
+                'AVG(Tuesday), ' +
+                'AVG(Wednesday), ' +
+                'AVG(Thursday), ' +
+                'AVG(Friday), ' +
+                'AVG(Saturday), ' +
+                'AVG(Sunday) ' +
                 'FROM timeslots ' +
                 'GROUP BY timeslot';
 
@@ -96,7 +99,7 @@ app.get('/overall', function(req, res) {
         if(err) {
             throw(err);
         }
-
+        // This is not necessary, since we can use an alias: SELECT AVG(Monday) as Monday
         results.forEach(function(o) {
             Object.keys(o).forEach(function(k) {
                 if(k.includes("AVG")) {

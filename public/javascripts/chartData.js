@@ -118,7 +118,7 @@ function getTodayData() {
 
             // Loop through each object in the array (e.g. {"timeslot":"6am-7am","Tuesday":6} )
             for(var i = 0, len = data.length; i < len; i++) {
-                timeslot.push(data[i].timeslot); // Push the value of the "timeslot" key (e.g. "6am-7am")
+                timeslot.push(data[i].timeslot); // Push the value of the "timeslot" key (e.g. "06:00-07:00")
                 numUsers.push(data[i][today]); // Push the integer value of the today key (e.g. 5)
             }
 
