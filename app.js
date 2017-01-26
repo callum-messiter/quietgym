@@ -71,7 +71,7 @@ app.get('/today', function(req, res) {
 
 app.get('/thisweek', function(req, res) {
     var query = "SELECT timeslot, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday " +
-                "FROM timeslots WHERE Week = YEARWEEK(NOW()) ";
+                "FROM timeslots WHERE Week = WEEK(CURDATE(), 3) ";
 
     connection.query(query, function(err, results) {
         if(err) {
