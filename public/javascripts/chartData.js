@@ -170,7 +170,7 @@ function getOverallData() {
 
 $(document).ready(function() {
     // Load today's data as a default
-    getTodayData();
+    getThisWeekData();
 
     var home = $(".navbar-header");
     var today = $("#todayLi");
@@ -178,7 +178,7 @@ $(document).ready(function() {
     var overall = $("#overallLi");
 
     home.click(function(){
-        getTodayData();
+        getThisWeekData();
     });
 
     today.click(function(){
