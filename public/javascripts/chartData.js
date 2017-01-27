@@ -1,3 +1,5 @@
+getThisWeekData();
+
 $("#myChart").mousedown(function(e){ e.preventDefault(); });
 
 function getCurrentDayName() {
