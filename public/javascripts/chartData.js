@@ -88,7 +88,7 @@ function setDataSets(data) {
 function createChart(dataSets, timeslot) {
     var ctx = $("#myChart");
 
-    var myChart = new Chart(ctx, {
+    window.myChart = new Chart(ctx, {
         type: 'line',
         fill: false,
         data: {
@@ -180,18 +180,22 @@ $(document).ready(function() {
     var overall = $("#overallLi");
 
     home.click(function(){
+        window.myChart.destroy();
         getThisWeekData();
     });
 
     today.click(function(){
+        window.myChart.destroy();
         getTodayData();
     });
 
     thisWeek.click(function(){
+        window.myChart.destroy();
         getThisWeekData();
     });
 
     overall.click(function() {
+        window.myChart.destroy();
         getOverallData();
     });
 });
