@@ -1,3 +1,6 @@
+// Load today's data as a default
+getTodayData();
+
 $("#myChart").mousedown(function(e){ e.preventDefault(); });
 
 function getCurrentDayName() {
@@ -86,7 +89,7 @@ function setDataSets(data) {
 function createChart(dataSets, timeslot) {
     var ctx = $("#myChart");
 
-    var myChart = new Chart(ctx, {
+    window.myChart = new Chart(ctx, {
         type: 'line',
         fill: false,
         data: {
@@ -108,7 +111,7 @@ function createChart(dataSets, timeslot) {
 
 function getTodayData() {
     $.ajax({
-        url: "http://localhost:3000/today",
+        url: "http://139.59.174.163:3000/today",
         type: "GET",
         success: function (data) {
 
@@ -140,7 +143,7 @@ function getTodayData() {
 
 function getThisWeekData() {
     $.ajax({
-        url: "http://localhost:3000/thisweek",
+        url: "http://139.59.174.163:3000/thisweek",
         type: "GET",
         success: function (results) {
             var data = organiseData(results);
@@ -155,7 +158,7 @@ function getThisWeekData() {
 
 function getOverallData() {
     $.ajax({
-        url: "http://localhost:3000/overall",
+        url: "http://139.59.174.163:3000/overall",
         type: "GET",
         success: function (results) {
             var data = organiseData(results);
@@ -169,8 +172,6 @@ function getOverallData() {
 }
 
 $(document).ready(function() {
-    // Load today's data as a default
-    getTodayData();
 
     var home = $(".navbar-header");
     var today = $("#todayLi");
@@ -178,18 +179,22 @@ $(document).ready(function() {
     var overall = $("#overallLi");
 
     home.click(function(){
+        window.myChart.destroy();
         getTodayData();
     });
 
     today.click(function(){
+        window.myChart.destroy();
         getTodayData();
     });
 
     thisWeek.click(function(){
+        window.myChart.destroy();
         getThisWeekData();
     });
 
     overall.click(function() {
+        window.myChart.destroy();
         getOverallData();
     });
 });

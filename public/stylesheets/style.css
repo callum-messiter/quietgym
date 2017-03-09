@@ -4,6 +4,10 @@ body {
   background-color: #333;
 }
 
+.container-fluid {
+  padding-top: 10px;
+}
+
 .row {
   padding-bottom: 20px;
 }
@@ -17,6 +21,7 @@ body {
 .nav>li>a {
   color: white;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .nav>li>a:hover {
@@ -31,6 +36,7 @@ body {
 
 .navbar-brand, .navbar-brand:hover, .navbar-brand:focus, .navbar-brand:active {
   color: white;
+  font-size: 22px;
 }
 
 .navbar-brand {
