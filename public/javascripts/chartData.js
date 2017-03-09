@@ -172,6 +172,8 @@ function getOverallData() {
 }
 
 $(document).ready(function() {
+    // Load today's data as a default
+    getTodayData();
 
     var home = $(".navbar-header");
     var today = $("#todayLi");
